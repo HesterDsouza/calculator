@@ -77,6 +77,9 @@ function operate(operator, a, b){
 }
 
 function clearDispaly(){
+    firstNum = '';
+    operator = '';
+    secondNum = '';
     displayVal = '';
     updateDisplay();
 };
@@ -87,21 +90,60 @@ function appendNumber(number){
 }
 
 function setOperator(selectedOperator){
-    operator = selectedOperator;
-    console.log("Operator:", operator)
     firstNum = parseFloat(displayVal);
     console.log("First Number",firstNum)
+    operator = selectedOperator;
+    console.log("Operator:", operator)
     displayVal = "";
 }
 
 function calculate(){
-    secondNum = parseFloat(displayVal);
-    console.log("Second Number",secondNum)
-    const result = operate(operator, firstNum, secondNum);
-    displayVal = result.toString();
+    if (operator && secondNum !== '') {
+        secondNum = parseFloat(displayVal);
+        if (operator === '/' && secondNum === 0) {
+            displayVal = 'Error: Division by zero';
+        } else {
+            const result = operate(operator, firstNum, secondNum);
+            displayVal = parseFloat(result.toFixed(2)).toString();
+            firstNum = displayVal; // Update firstNum with the result for continued calculations
+            operator = '';
+            secondNum = '';
+        }
+    } else {
+        displayVal = 'Error: Incomplete expression';
+    }
     updateDisplay();
 }
 
 function updateDisplay(){
     document.querySelector(".display").value = displayVal;
 }
+
+// document.addEventListener('keydown', function(event){
+//     const key = event.key;
+
+//     if(key >= '0' || key <= '9'){
+//         appendNumber(key);
+//     } else if(key === '+' || key === '-' || key === '*' || key === '/'){
+//         setOperator(key);
+//     } else if(key === 'Enter'){
+//         calculate();
+//     } else if(key === 'Escape'){
+//         clearDispaly();
+//     }
+// });
+
+document.querySelectorAll('.number').forEach(button => {
+    button.addEventListener('click', function(){
+        appendNumber(button.textContent);
+    });
+});
+
+document.querySelectorAll('.operator').forEach(button => {
+    button.addEventListener('click', function(){
+        setOperator(button.textContent);
+    });
+});
+
+document.querySelector("#enter").addEventListener('click', calculate);
+document.querySelector("#clear").addEventListener('click', clearDispaly);
