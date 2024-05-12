@@ -98,20 +98,10 @@ function setOperator(selectedOperator){
 }
 
 function calculate(){
-    if (operator && secondNum !== '') {
-        secondNum = parseFloat(displayVal);
-        if (operator === '/' && secondNum === 0) {
-            displayVal = 'Error: Division by zero';
-        } else {
-            const result = operate(operator, firstNum, secondNum);
-            displayVal = parseFloat(result.toFixed(2)).toString();
-            firstNum = displayVal; // Update firstNum with the result for continued calculations
-            operator = '';
-            secondNum = '';
-        }
-    } else {
-        displayVal = 'Error: Incomplete expression';
-    }
+    secondNum = parseFloat(displayVal);
+    console.log("Second Number",secondNum)
+    const result = operate(operator, firstNum, secondNum);
+    displayVal = result.toString();
     updateDisplay();
 }
 
