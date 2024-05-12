@@ -1,17 +1,3 @@
-let num1 = 4;
-let num2 = 2;
-let array = [4,2];
-let raisedTo = 2;
-
-const add = function() {
-	// return num1 + num2;
-    console.log("Addition: ",num1 + num2)
-};
-
-const subtract = function() {
-	// return num1 - num2;
-    console.log("Difference: ",num1 - num2)
-};
 
 // const sum = function() {
 //   let total = 0;
@@ -22,23 +8,19 @@ const subtract = function() {
 //             console.log('Error: Array contains non-numeric element');
 //         }
 //     }    
-//     return total;
+//     // return total;
+//     console.log("Sum: ",total)
 // };
 
-const multiply = function() {
-  const product = array.reduce((accumulator, currentValue) => accumulator * currentValue);
-//   return product;
-console.log("Product: ",product)
-};
-
-const divide = function(){
-    if (num2 === 0) alert("Error. Divisor cannot be 0")
-        // else return num1 / num2;
-    else console.log("Division: ", num1 / num2)
-}
+// const multiply = function() {
+//   const product = array.reduce((accumulator, currentValue) => accumulator * currentValue);
+// //   return product;
+// console.log("Product: ",product)
+// };
 
 // const power = function(){
-//   return num1 ** raisedTo;
+// //   return num1 ** raisedTo;
+// console.log(`Power of ${num1} raised to ${raisedTo} : ${num1 ** raisedTo}`)
 // };
 
 // const factorial = function(n){
@@ -49,19 +31,77 @@ const divide = function(){
 //   }
 // };
 
+//Main
 
-//Dom
+let firstNum = "";
+let operator = "";
+let secondNum = "";
+let displayVal = "";
 
-const container = document.querySelector(".calcContainer");
+function add(a, b){
+    return a+b;
+}
 
-const addBtn = document.querySelector(".add");
-addBtn.addEventListener("click", add);
+function sub(a, b){
+    return a-b;
+}
 
-const diffBtn = document.querySelector(".subtract");
-diffBtn.addEventListener("click", subtract);
+function multiply(a, b){
+    return a*b;
+}
 
-const productBtn = document.querySelector(".multiply");
-productBtn.addEventListener("click", multiply);
+function divide(a, b){
+    if (b === 0) 
+        return "Error";
+    else
+        return a / b;
+}
 
-const divideBtn = document.querySelector(".divide");
-divideBtn.addEventListener("click", divide);
+function operate(operator, a, b){
+    switch(operator){
+        case "+":
+            return add(a,b)
+
+        case "-":
+            return sub(a,b)
+
+        case "*":
+            return multiply(a,b)
+
+        case "/":
+            return divide(a,b)
+        
+        default:
+            return "Invalid Operator"
+    }
+}
+
+function clearDispaly(){
+    displayVal = '';
+    updateDisplay();
+};
+
+function appendNumber(number){
+    displayVal += number;
+    updateDisplay();
+}
+
+function setOperator(selectedOperator){
+    operator = selectedOperator;
+    console.log("Operator:", operator)
+    firstNum = parseFloat(displayVal);
+    console.log("First Number",firstNum)
+    displayVal = "";
+}
+
+function calculate(){
+    secondNum = parseFloat(displayVal);
+    console.log("Second Number",secondNum)
+    const result = operate(operator, firstNum, secondNum);
+    displayVal = result.toString();
+    updateDisplay();
+}
+
+function updateDisplay(){
+    document.querySelector(".display").value = displayVal;
+}
