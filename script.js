@@ -33,107 +33,108 @@
 
 //Main
 
-let firstNum = "";
-let operator = "";
-let secondNum = "";
-let displayVal = "";
+let displayValue = '';
+let firstNumber = '';
+let operator = '';
+let secondNumber = '';
 
-function add(a, b){
-    return a+b;
+function appendNumber(number) {
+  if (displayValue === 'Error') {
+    displayValue = '';
+  }
+  displayValue += number;
+  updateDisplay();
 }
 
-function sub(a, b){
-    return a-b;
+function appendDecimal() {
+  if (!displayValue.includes('.')) {
+    displayValue += '.';
+    updateDisplay();
+  }
 }
 
-function multiply(a, b){
-    return a*b;
+function setOperator(op) {
+  if (operator === '') {
+    firstNumber = displayValue;
+    operator = op;
+    displayValue = '';
+    updateDisplay();
+  }
 }
 
-function divide(a, b){
-    if (b === 0) 
-        return "Error";
-    else
-        return a / b;
-}
-
-function operate(operator, a, b){
-    switch(operator){
-        case "+":
-            return add(a,b)
-
-        case "-":
-            return sub(a,b)
-
-        case "*":
-            return multiply(a,b)
-
-        case "/":
-            return divide(a,b)
-        
-        default:
-            return "Invalid Operator"
+function calculate() {
+  if (operator !== '' && displayValue !== '') {
+    secondNumber = displayValue;
+    let result;
+    switch (operator) {
+      case '+':
+        result = add(parseFloat(firstNumber), parseFloat(secondNumber));
+        break;
+      case '-':
+        result = subtract(parseFloat(firstNumber), parseFloat(secondNumber));
+        break;
+      case '*':
+        result = multiply(parseFloat(firstNumber), parseFloat(secondNumber));
+        break;
+      case '/':
+        if (secondNumber === '0') {
+          result = 'Error';
+        } else {
+          result = divide(parseFloat(firstNumber), parseFloat(secondNumber));
+        }
+        break;
     }
-}
-
-function clearDispaly(){
-    firstNum = '';
+    displayValue = result.toString();
+    updateDisplay();
+    firstNumber = '';
     operator = '';
-    secondNum = '';
-    displayVal = '';
-    updateDisplay();
-};
-
-function appendNumber(number){
-    displayVal += number;
-    updateDisplay();
+    secondNumber = '';
+  }
 }
 
-function setOperator(selectedOperator){
-    firstNum = parseFloat(displayVal);
-    console.log("First Number",firstNum)
-    operator = selectedOperator;
-    console.log("Operator:", operator)
-    displayVal = "";
+function clearDisplay() {
+  displayValue = '';
+  firstNumber = '';
+  operator = '';
+  secondNumber = '';
+  updateDisplay();
 }
 
-function calculate(){
-    secondNum = parseFloat(displayVal);
-    console.log("Second Number",secondNum)
-    const result = operate(operator, firstNum, secondNum);
-    displayVal = result.toString();
-    updateDisplay();
+function backspace() {
+  displayValue = displayValue.slice(0, -1);
+  updateDisplay();
 }
 
-function updateDisplay(){
-    document.querySelector(".display").value = displayVal;
+function updateDisplay() {
+  const display = document.querySelector('.display');
+  display.textContent = displayValue;
 }
 
-// document.addEventListener('keydown', function(event){
-//     const key = event.key;
+function add(a, b) {
+  return Math.round((a + b) * 1000) / 1000;
+}
 
-//     if(key >= '0' || key <= '9'){
-//         appendNumber(key);
-//     } else if(key === '+' || key === '-' || key === '*' || key === '/'){
-//         setOperator(key);
-//     } else if(key === 'Enter'){
-//         calculate();
-//     } else if(key === 'Escape'){
-//         clearDispaly();
-//     }
-// });
+function subtract(a, b) {
+  return Math.round((a - b) * 1000) / 1000;
+}
 
-document.querySelectorAll('.number').forEach(button => {
-    button.addEventListener('click', function(){
-        appendNumber(button.textContent);
-    });
+function multiply(a, b) {
+  return Math.round((a * b) * 1000) / 1000;
+}
+
+function divide(a, b) {
+  return Math.round((a / b) * 1000) / 1000;
+}
+
+document.addEventListener('keydown', function(event) {
+  const key = event.key;
+  if (!isNaN(key) || key === '.') {
+    appendNumber(key);
+  } else if (key === '+' || key === '-' || key === '*' || key === '/') {
+    setOperator(key);
+  } else if (key === 'Enter') {
+    calculate();
+  } else if (key === 'Backspace') {
+    backspace();
+  }
 });
-
-document.querySelectorAll('.operator').forEach(button => {
-    button.addEventListener('click', function(){
-        setOperator(button.textContent);
-    });
-});
-
-document.querySelector("#enter").addEventListener('click', calculate);
-document.querySelector("#clear").addEventListener('click', clearDispaly);
